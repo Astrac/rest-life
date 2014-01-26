@@ -18,6 +18,8 @@ In the root of the project, run 'sbt run' command to start the server. You can u
 curl -X POST -H "Content-Type: application/json" -d '{"board": [[0,0],[0,1],[0,2]],"steps": 10}' http://localhost:9909/
 ```
 
+There is a minimal web UI written in AngularJS in src/web. The built version of the UI is in the src/main/resources folder and is available at http://127.0.0.1:9909/web/index.html when running the spray service.
+
 
 # Rules of the game of life
 
