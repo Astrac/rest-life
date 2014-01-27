@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('webApp')
-  .controller('MainCtrl', function ($interval, $http, $scope) {
+  .controller('MainCtrl', function ($scope, LifeSym) {
     var boardConfig = {
-      v: 30,
-      h: 45,
-      cellSize: 18,
-      cellMargin: 1
+      v: 40,
+      h: 60,
+      cellSize: 15,
+      cellMargin: 0
     };
 
     var dist = function(index) {
@@ -35,13 +35,35 @@ angular.module('webApp')
     };
 
     var board = {
-      boardConfig: boardConfig,
       cells: cells(),
       selectedCells: [],
       class: function(cell) {
         return _.find(board.selectedCells, function(c) { return c.x == cell.x && c.y == cell.y; }) ? "cell-live" : "cell";
       }
     };
+
+    var toSymData = function(board, steps) {
+      return _.map(board, function(c) { return [c.x, c.y]; });
+    }
+
+    var symCells = function(step) {
+      return _.map(step, function(s) { return cellFactory(s[0], s[1]); });
+    }
+
+    $scope.running = false;
+
+    $scope.startSym = function() {
+      LifeSym.startSym(toSymData(board.selectedCells), function(cells) {
+        board.selectedCells = symCells(cells);
+      });
+
+      $scope.running = true;
+    };
+
+    $scope.stopSym = function() {
+      LifeSym.stopSym();
+      $scope.running = false;
+    }
 
     $scope.toggle = function(c) {
       var idx = board.selectedCells.indexOf(c);
@@ -52,46 +74,12 @@ angular.module('webApp')
       }
     }
 
-    var symStop = null;
+    var selecting = false;
+    $scope.startSelecting = function() { selecting = true; };
+    $scope.endSelecting = function() { selecting = false; };
+    $scope.updateSelection = function(cell) { if (selecting) $scope.toggle(cell); }
 
-    $scope.startSym = function() {
-      console.log(board.selectedCells);
-      if (symStop === null) {
-        var toSymData = function(board, steps) {
-          return _.map(board, function(c) { return [c.x, c.y]; });
-        }
-
-        var symCells = function(step) {
-          return _.map(step, function(s) { return cellFactory(s[0], s[1]); });
-        }
-
-        var steps = [];
-        var requestSteps = function() {
-          var symData = steps.length > 0 ? _.last(steps) : toSymData(board.selectedCells)
-
-          $http({method: 'POST', data: { board: symData, steps: 40 }, url: '/board'})
-            .success(function(data) {
-              steps = steps.concat(data);
-            });
-        }
-
-        requestSteps();
-        $interval(function() {
-          requestSteps();
-        }, 2500);
-
-        $interval(function() {
-          if (steps.length > 0) {
-            var nextStep = _.last(steps);
-            var nextCells = symCells(nextStep);
-            steps = _.without(steps, nextStep);
-
-            console.log(nextCells);
-            board.selectedCells = nextCells;
-          }
-        }, 250);
-      }
-    }
+    $scope.clearBoard = function() { board.selectedCells = []; };
 
     $scope.board = board;
   });

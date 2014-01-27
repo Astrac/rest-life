@@ -5970,7 +5970,7 @@ td.visible-print {
 }
 .cell {
   fill: #505050;
-  stroke-width: 2;
+  stroke-width: 1;
   stroke: #202020;
 }
 .cell-live {
