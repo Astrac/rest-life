@@ -9,6 +9,7 @@ object WorkmapBuild extends Build {
   // Utilities
   lazy val config = "com.typesafe" % "config" % "1.0.2"
   lazy val specs2 = "org.specs2" %% "specs2" % "2.2.3" % "test"
+  lazy val scalaTest = "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
 
   // Logging
   lazy val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.0.13"
@@ -32,6 +33,7 @@ object WorkmapBuild extends Build {
       akkaActor,
       akkaSlf4j,
       config,
+      scalaTest,
       specs2,
       logbackClassic,
       logbackCore,
