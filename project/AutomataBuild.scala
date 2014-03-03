@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 
-object WorkmapBuild extends Build {
+object AutomataBuild extends Build {
   // Akka
   lazy val akkaActor = "com.typesafe.akka" %% "akka-actor" % "2.2.3"
   lazy val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % "2.2.3"
@@ -16,31 +16,30 @@ object WorkmapBuild extends Build {
   lazy val logbackCore = "ch.qos.logback" % "logback-core" % "1.0.13"
   lazy val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.5"
 
-  // Spray
-  lazy val sprayCan = "io.spray" % "spray-can" % "1.2.0"
-  lazy val sprayJson = "io.spray" % "spray-json_2.10" % "1.2.5"
-  lazy val sprayRouting = "io.spray" % "spray-routing" % "1.2.0"
-  lazy val sprayTestkit = "io.spray" % "spray-testkit" % "1.2.0"
+  // ScalaFX
+  lazy val scalaFxSettings = Seq(
+    unmanagedJars in Compile += Attributed.blank(file(System.getenv("JAVA_HOME") + "/jre/lib/jfxrt.jar")),
+    fork in run := true
+  )
+  lazy val scalaFx = "org.scalafx" % "scalafx_2.10" % "1.0.0-M7"
 
-  lazy val lsgu_automata = Project(id = "lsgu-automata", base = file("./"), settings = Project.defaultSettings ++ Seq(
-    scalaVersion := "2.10.3",
-    sbtVersion := "0.13.1",
-    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
-    resolvers ++= Seq(
-      "spray repo" at "http://repo.spray.io",
-      "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"),
-    libraryDependencies ++= Seq(
-      akkaActor,
-      akkaSlf4j,
-      config,
-      scalaTest,
-      specs2,
-      logbackClassic,
-      logbackCore,
-      slf4jApi,
-      sprayCan,
-      sprayJson,
-      sprayRouting,
-      sprayTestkit
-    )))
+  lazy val lsgu_automata = Project(id = "lsgu-automata", base = file("./"),
+    settings = Project.defaultSettings ++ scalaFxSettings ++ Seq(
+      scalaVersion := "2.10.3",
+      sbtVersion := "0.13.1",
+      scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
+      resolvers ++= Seq(
+        "spray repo" at "http://repo.spray.io",
+        "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"),
+      libraryDependencies ++= Seq(
+        akkaActor,
+        akkaSlf4j,
+        config,
+        scalaTest,
+        specs2,
+        logbackClassic,
+        logbackCore,
+        slf4jApi,
+        scalaFx
+      )))
 }
