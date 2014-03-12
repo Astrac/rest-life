@@ -48,4 +48,6 @@ object LifeSym {
     // Use the defined function to calculate the states
     runBoard(b, steps)
   }
+
+  def symStream(board: Board): Stream[Board] = Stream.iterate(board)(b => LifeSym.nextGeneration(b))
 }
