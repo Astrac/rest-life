@@ -1,16 +1,16 @@
 import javafx.beans.property.SimpleBooleanProperty
-import javafx.event.{ActionEvent, EventHandler}
-import javafx.scene.input.MouseEvent
 import org.lsug.restlife.LifeSym
 import org.lsug.restlife.LifeSym.Board
 import scalafx.animation.{AnimationTimer, Interpolator, Timeline}
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.scene.control.Button
+import scalafx.scene.input.{MouseEvent, DragEvent, TransferMode}
 import scalafx.scene.layout.{AnchorPane, BorderPane}
-import scalafx.scene.Scene
+import scalafx.scene.{input, Scene}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
@@ -18,6 +18,7 @@ object LifeApp extends JFXApp {
   val selecting = new SimpleBooleanProperty()
   val running = new SimpleBooleanProperty()
   var lastTime = 0L
+
   val timer = AnimationTimer { now: Long =>
     if (now - lastTime >= 200000000) {
       setBoard(LifeSym.nextGeneration(board))
@@ -27,14 +28,12 @@ object LifeApp extends JFXApp {
 
   val startStopButton = new Button("Start") {
     text <== when(running) choose "Stop" otherwise "Start"
-    onAction = new EventHandler[ActionEvent] {
-      def handle(p1: ActionEvent): Unit = {
-        running() = !running()
-        if (running()) {
-          timer.start()
-        } else {
-          timer.stop()
-        }
+    onAction = (p1: ActionEvent) => {
+      running() = !running()
+      if (running()) {
+        timer.start()
+      } else {
+        timer.stop()
       }
     }
   }
@@ -45,15 +44,26 @@ object LifeApp extends JFXApp {
 
     def update(b: Board) = b.contains(LifeSym.cell(rx, ry))
 
-    onMouseClicked = new EventHandler[MouseEvent] {
-      def handle(p1: MouseEvent): Unit = if (!running()) { alive() = !alive() }
-    }
+    onMouseClicked = (p1: MouseEvent) => if (!running()) { alive() = !alive() }
+
+    onMouseMoved = (p1: MouseEvent) => { println(s"MouseMoved $rx - $ry") }
+    onMouseEntered = (p1: MouseEvent) => { println(s"MouseEnter $rx - $ry") }
+    onMouseDragEntered = (p1: MouseEvent) => { println(s"MouseDragEnter $rx - $ry") }
+    onMouseDragExited = (p1: MouseEvent) => { println(s"MouseDragExited $rx - $ry") }
+    onMouseDragOver = (ev: input.MouseEvent) => { println(s"MouseDragOver $rx - $ry") }
+    onMouseExited = (p1: MouseEvent) => { println(s"MouseExit $rx - $ry") }
+    onMouseDragged = (p1: MouseEvent) => { println(s"MouseDragged $rx - $ry") }
+
+//    onDragOver = (ev: DragEvent) => { println(s"DragOver $rx - $ry") }
+//    onDragEntered = (ev: DragEvent) => { println(s"DragEntered $rx - $ry") }
+//    onMouseDragExited = (p1: MouseEvent) => { println(s"DragExited $rx - $ry") }
+//    onDragDetected = (p1: MouseEvent) => { println(s"DragDetected $rx - $ry") }
 
     x = rx * 10
     y = ry * 10
     width = 8
     height = 8
-    fill <== when (hover && running.not()) choose Color.gray(0.8) otherwise (when (alive) choose Color.gray(1) otherwise Color.gray(0.4))
+    fill <== when (hover && running.not()) choose Color.gray(0.6) otherwise (when (alive) choose Color.gray(0.9) otherwise Color.gray(0.1))
     arcWidth = 2
     arcHeight = 2
   }
@@ -76,7 +86,7 @@ object LifeApp extends JFXApp {
   stage = new PrimaryStage {
     scene = new Scene {
       root = new BorderPane {
-        fill = Color.gray(0.1)
+        fill = Color.gray(0)
         center = new AnchorPane {
           content = cells
         }
