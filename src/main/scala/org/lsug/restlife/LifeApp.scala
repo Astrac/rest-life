@@ -15,7 +15,6 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
 object LifeApp extends JFXApp {
-  val selecting = new SimpleBooleanProperty()
   val running = new SimpleBooleanProperty()
   var lastTime = 0L
 
@@ -45,19 +44,6 @@ object LifeApp extends JFXApp {
     def update(b: Board) = b.contains(LifeSym.cell(rx, ry))
 
     onMouseClicked = (p1: MouseEvent) => if (!running()) { alive() = !alive() }
-
-    onMouseMoved = (p1: MouseEvent) => { println(s"MouseMoved $rx - $ry") }
-    onMouseEntered = (p1: MouseEvent) => { println(s"MouseEnter $rx - $ry") }
-    onMouseDragEntered = (p1: MouseEvent) => { println(s"MouseDragEnter $rx - $ry") }
-    onMouseDragExited = (p1: MouseEvent) => { println(s"MouseDragExited $rx - $ry") }
-    onMouseDragOver = (ev: input.MouseEvent) => { println(s"MouseDragOver $rx - $ry") }
-    onMouseExited = (p1: MouseEvent) => { println(s"MouseExit $rx - $ry") }
-    onMouseDragged = (p1: MouseEvent) => { println(s"MouseDragged $rx - $ry") }
-
-//    onDragOver = (ev: DragEvent) => { println(s"DragOver $rx - $ry") }
-//    onDragEntered = (ev: DragEvent) => { println(s"DragEntered $rx - $ry") }
-//    onMouseDragExited = (p1: MouseEvent) => { println(s"DragExited $rx - $ry") }
-//    onDragDetected = (p1: MouseEvent) => { println(s"DragDetected $rx - $ry") }
 
     x = rx * 10
     y = ry * 10
