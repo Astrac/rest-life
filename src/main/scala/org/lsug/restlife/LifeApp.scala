@@ -1,16 +1,16 @@
 import javafx.beans.property.SimpleBooleanProperty
 import org.lsug.restlife.LifeSym
 import org.lsug.restlife.LifeSym.Board
-import scalafx.animation.{AnimationTimer, Interpolator, Timeline}
+import scalafx.animation.AnimationTimer
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.scene.control.Button
-import scalafx.scene.input.{MouseEvent, DragEvent, TransferMode}
+import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{AnchorPane, BorderPane}
-import scalafx.scene.{input, Scene}
+import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
